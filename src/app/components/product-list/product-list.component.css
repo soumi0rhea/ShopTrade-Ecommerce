@@ -1,0 +1,15 @@
+.product-button-container{
+    background-color: gray;
+    height: 100%;
+    width: 100%;
+}
+
+.mat-card-image {
+    width: calc(100% - 2px);
+    height: calc(100% - 10px);
+    margin: 0;
+}
+
+.mat-card-image:first-child {
+    margin-top: 0;
+}

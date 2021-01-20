@@ -1,0 +1,64 @@
+<div class="container">
+    <section class="m-1 p-1">
+        <div class="row">
+            <div class="col-6">
+                <mat-chip-list #productFilterChipList>
+                    <mat-chip [selected]="selected" (click)="selected = !selected">All</mat-chip>
+                    <mat-chip *ngFor="let tag of tagArray" (selectionChange)="addFilter(tag,$event)"
+                        [selected]="tag.state" (click)="tag.state=!tag.state">
+                        {{tag.tagName| titlecase}}
+                    </mat-chip>
+                </mat-chip-list>
+            </div>
+            <div class="col-6 text-right">
+                <button mat-raised-button [matMenuTriggerFor]="menu">Sort By</button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="sortAscending()">Price Low to High</button>
+                    <button mat-menu-item (click)="sortDescending()">Price High to Low</button>
+                </mat-menu>
+            </div>
+        </div>
+    </section>
+    <section class="m-1 p-1">
+        <div class="row">
+            <div class="col-4" *ngFor="let product of productList;index as i">
+                <mat-card class="product-card m-1 p-1" (mouseenter)="showVariant(product)"
+                    (mouseleave)="toShowVariant[product.id]=false;">
+                    <img mat-card-image [src]="product.image_src[0]" cdkOverlayOrigin
+                        #itemMenuTrigger="cdkOverlayOrigin">
+                    <mat-card-header>
+                        <mat-card-title>{{product.vendor}}</mat-card-title>
+                        <mat-card-subtitle>
+                            <span>{{product.name | titlecase}}</span>
+                        </mat-card-subtitle>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <div>
+                            <span class="p-1"><b>${{product.price}}</b></span>
+                            <span class="p-1 text-muted"><s>${{product.compare_at_price}}</s></span>
+                            <span class="text-danger"
+                                [innerHTML]="calculateDiscount(product.price,product.compare_at_price)"></span>
+                        </div>
+                        <!-- <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="itemMenuTrigger"
+                            [cdkConnectedOverlayOpen]="toShowVariant[product.id]"
+                            [cdkConnectedOverlayPositions]="positions">
+                            <div class="product-button-container">
+                                <button class="p-1 m-1" mat-fab color="accent" *ngFor="let variant of product.options"
+                                    (click)="addToCart(product)">
+                                    {{variant.value}}
+                                </button>
+                            </div>
+                        </ng-template> -->
+
+                        <div *ngIf="toShowVariant[product.id]" class="product-button-container">
+                            <button class="p-1 m-1" mat-fab color="accent" *ngFor="let variant of product.options"
+                                (click)="addToCart(product,variant)">
+                                {{variant.value}}
+                            </button>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </section>
+</div>
